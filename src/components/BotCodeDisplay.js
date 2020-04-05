@@ -17,7 +17,8 @@ export const BotCodeEditor = ({ onLoad, onChange, value, ...other }) => (
     showPrintMargin={false}
     value={value}
     setOptions={{
-      useWorker: false
+      useWorker: false,
+      fontSize: '9pt'
     }}
     {...other}
   />

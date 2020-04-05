@@ -5,6 +5,10 @@ import {
 
 const EVALUATION_F = eval
 
+const BUILT_IN = `
+  const makePositionList = _ => [...Array(11).keys()].map(x => [...Array(11).keys()].map(y =>({x, y}))).reduce((a,b)=>a.concat(b))
+`
+
 export const runScript = (source : string, friendlies, enemies, state) : BotOutput => {
 
   // Construct the function from the args
@@ -14,6 +18,7 @@ export const runScript = (source : string, friendlies, enemies, state) : BotOutp
     let state = ${JSON.stringify(state)}
     let logs = []
     const log = (...args) => logs.push(args.map(x => typeof x === 'string' ? x : JSON.stringify(x)).join(' '))
+    ${BUILT_IN}
     const run = () => {
       ${source}
     }
