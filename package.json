@@ -4,7 +4,7 @@
   "description": "Minimalist successor to Hex-Redux",
   "scripts": {
     "start": "parcel static/index.html",
-    "build": "parcel build static/index.html"
+    "build": "parcel build static/index.html --public-url http://ewanb.me/hex-mini/"
   },
   "repository": {
     "type": "git",
