@@ -99,7 +99,7 @@ const MainPage = () => {
   }, [boardData, currentTurn])
 
   return (
-    <Segment>
+    <Segment basic>
       <Button onClick={handleCompete}> Compete! </Button>
       <TurnControls boardData={boardData} onTurnChange={setCurrentTurn} />
       <Board boardData={boardData ? turnData : undefined} />
