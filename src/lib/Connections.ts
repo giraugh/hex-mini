@@ -7,10 +7,10 @@ import { transposeBoard } from './Transposition'
 
 export const winningAllegiance = (board : BoardState) : ( Allegiance | void) => {
   // Has red or blue won?
-  let redWon = allegianceHasWon(board, 'RED')
+  const redWon = allegianceHasWon(board, 'RED')
   if (redWon) { return 'RED' }
 
-  let blueWon = allegianceHasWon(board, 'BLUE')
+  const blueWon = allegianceHasWon(board, 'BLUE')
   if (blueWon) { return 'BLUE' }
 
   // No winner yet

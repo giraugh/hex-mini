@@ -25,5 +25,4 @@ export type RoundOverState = {
 
 export type RoundState = OngoingRoundState | RoundOverState
 
-
 export type NextRoundStateF = (state : RoundState) => RoundState
