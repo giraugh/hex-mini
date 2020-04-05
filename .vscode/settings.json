@@ -1,3 +1,14 @@
 {
-  "eslint.enable": true
+  "eslint.enable": true,
+  "files.exclude": {
+    "node_modules/": true,
+    "dist": true,
+    ".cache": true,
+    ".github": true,
+    ".vscode": true,
+    ".eslint*": true,
+    ".gitignore": true,
+    "LICENSE": true,
+    "package-lock.json": true
+  }
 }
