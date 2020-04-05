@@ -53,7 +53,7 @@ export const transformBoardData = ({ red, blue }) => {
 
 export const translateBoardData = ({ red, blue }, xOffset, yOffset) => {
   return {
-    red: red.map(({ x, y }) => ({ x: x + xOffset, y: y + yOffset})),
+    red: red.map(({ x, y }) => ({ x: x + xOffset, y: y + yOffset })),
     blue: blue.map(({ x, y }) => ({ x: x + xOffset, y: y + yOffset }))
   }
 }
