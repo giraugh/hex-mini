@@ -50,14 +50,14 @@ const MainPage = () => {
     console.log('match result of ', result)
 
     // Save messages
-    // #TODO:
-    /*
-    const logs = result.botLogs
-    const errors = result.botErrors
-    const gameState = JSON.parse(result.terminalStateStr)
-    const gameLength = gameState.red.length + gameState.blue.length
+    const logs = [
+      ...result.logs.red.map(log => ({ ...log, player: 'RED' })),
+      ...result.logs.blue.map(log => ({ ...log, player: 'BLUE' }))
+    ]
+    const errors = result.error ? [result.error] : []
+    const gameLength = result.board.red.length + result.board.blue.length
     const allMessages = [
-      ...errors.map(({ player, message }) => ({ player, message, isError: true, turn: gameLength + 1 })),
+      ...errors.map(error => ({ isError: true, message: error, turn: gameLength, player: result.winner === 'RED' ? 'BLUE' : 'RED' })),
       ...logs.map(({ player, message, turn }) => ({ player, message, turn, isError: false }))
     ]
 
@@ -65,7 +65,6 @@ const MainPage = () => {
       allMessages.filter(message => message.player.toLowerCase() === 'red'),
       allMessages.filter(message => message.player.toLowerCase() === 'blue')
     ])
-    */
 
     // Save board data
     setBoardData(translateBoardData(result.board, 1, 1))

@@ -12,10 +12,12 @@ export const runScript = (source : string, friendlies, enemies, state) : BotOutp
     const friendlies = ${JSON.stringify(friendlies)}
     const enemies = ${JSON.stringify(enemies)}
     let state = ${JSON.stringify(state)}
+    let logs = []
+    const log = (...args) => logs.push(args.map(x => typeof x === 'string' ? x : JSON.stringify(x)).join(' '))
     const run = () => {
       ${source}
     }
-    ({ hex: run(), state })
+    ({ hex: run(), state, logs })
   `
 
   let result

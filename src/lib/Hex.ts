@@ -46,6 +46,7 @@ export const nextRoundState : NextRoundStateF = (state) => {
   if (botOutput && botOutput.error) {
     return {
       board: state.board,
+      logs: state.logs,
       error: botOutput.error,
       winner: isRedTurn ? 'BLUE' : 'RED'
     }
@@ -56,17 +57,29 @@ export const nextRoundState : NextRoundStateF = (state) => {
   if (botReturnErr) {
     return {
       board: state.board,
+      logs: state.logs,
       error: botReturnErr,
       winner: isRedTurn ? 'BLUE' : 'RED'
     }
   }
 
   // Destructure the bot output
-  let { hex, state : newBotState } = botOutput
+  let { hex, state : newBotState, logs : botLogMessages } = botOutput
   
   // Transpose the hex if its blues turn
   if (!isRedTurn) {
     hex = transposePosition(hex)
+  }
+
+  // Append new logs to list of logs for red and blue
+  let newLogs = state.logs
+  if (botLogMessages && botLogMessages.length) {
+    const turn = state.board.red.length + state.board.blue.length
+    const botLogs = botLogMessages.map(msg => ({ message: msg, turn }))
+    newLogs = {
+      red: isRedTurn ? [...state.logs.red, ...botLogs] : state.logs.red,
+      blue: !isRedTurn ? [...state.logs.blue, ...botLogs] : state.logs.blue
+    }
   }
 
   // Was this a valid move?
@@ -74,6 +87,7 @@ export const nextRoundState : NextRoundStateF = (state) => {
   if (moveErr) {
     return {
       board: state.board,
+      logs: newLogs,
       error: moveErr,
       winner: isRedTurn ? 'BLUE' : 'RED'
     }
@@ -92,6 +106,7 @@ export const nextRoundState : NextRoundStateF = (state) => {
     console.log('WINNER IS ', winner)
     return {
       board: newBoard,
+      logs: newLogs,
       winner: winner
     }
   }
@@ -99,7 +114,8 @@ export const nextRoundState : NextRoundStateF = (state) => {
   // Construct new state
   const newRoundState : RoundState = {
     bots: newBots,
-    board: newBoard
+    board: newBoard,
+    logs: newLogs
   }
 
   return newRoundState
@@ -111,6 +127,10 @@ export const makeRound = (redRunSource : string, blueRunSource : string) : Round
     blue: { run: makeBotRunFunction(blueRunSource), state: {} }
   },
   board: {
+    red: [],
+    blue: []
+  },
+  logs: {
     red: [],
     blue: []
   }
