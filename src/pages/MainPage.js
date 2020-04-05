@@ -6,11 +6,11 @@ import Board, { translateBoardData, boardAtTurn } from '../components/Board'
 import BotCodeEditorPanel from '../components/BotCodeEditorPanel'
 import { runGame } from '../controller'
 
-const DEFAULT_BOT_CODE = `// Welcome to Hex-Mini!
+const DEFAULT_BOT_CODE = `/* Welcome to Hex-Mini! */
 // Below is an example script
 // See if you can improve it!
 
-// Every hex script is passed two arrays of positions, 'friendlies' and 'enemies'
+// Every script is passed two arrays of positions, 'friendlies' and 'enemies'
 // 'friendlies' contains the position of all of your pieces
 // 'enemies' contains the position of all of your opponents pieces
 
@@ -18,14 +18,15 @@ const DEFAULT_BOT_CODE = `// Welcome to Hex-Mini!
 const checkers = [...friendlies, ...enemies]
 
 // Define a predicate to determine whether a given position, h, is empty
-const isEmpty = h => !checkers.some(({ x, y}) => h.x === x && h.y === y)
+const isEmpty = h =>
+  !checkers.some(({ x, y}) => h.x === x && h.y === y)
 
 // Create an array of every possible position
 // (the board is 11x11 and indexed from [0, 10])
 // this makes use of a built-in function 'makePositionList'
 const pos = makePositionList()
 
-// Filter the array of all positions by which are empty to create an array of all empty positions
+// Filter the array of all positions to find only the empty ones
 const empty = pos.filter(isEmpty)
 
 // Return a random element of the array of empty positions
