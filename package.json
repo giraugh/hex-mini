@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Minimalist successor to Hex-Redux",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "parcel static/index.html",
+    "build": "parcel build static/index.html"
   },
   "repository": {
     "type": "git",
