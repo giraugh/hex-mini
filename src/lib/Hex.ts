@@ -47,7 +47,7 @@ export const nextRoundState : NextRoundStateF = (state) => {
     return {
       board: state.board,
       logs: state.logs,
-      error: botOutput.error,
+      error: String(botOutput.error),
       winner: isRedTurn ? 'BLUE' : 'RED'
     }
   }
@@ -58,7 +58,7 @@ export const nextRoundState : NextRoundStateF = (state) => {
     return {
       board: state.board,
       logs: state.logs,
-      error: botReturnErr,
+      error: String(botReturnErr),
       winner: isRedTurn ? 'BLUE' : 'RED'
     }
   }
@@ -88,7 +88,7 @@ export const nextRoundState : NextRoundStateF = (state) => {
     return {
       board: state.board,
       logs: newLogs,
-      error: moveErr,
+      error: String(moveErr),
       winner: isRedTurn ? 'BLUE' : 'RED'
     }
   }

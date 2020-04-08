@@ -9,7 +9,7 @@ export type BoardState = {
   blue: Checker[]
 }
 
-export type BotOutput = { hex: Checker, state : object, error? : Error, logs: LogMessage[] }
+export type BotOutput = { hex: Checker, state : object, error? : String, logs: LogMessage[] }
 export type BotRunF = (friendlies: Checker[], enemies: Checker[], state : object) => BotOutput
 
 export type OngoingRoundState = {
@@ -23,7 +23,7 @@ export type OngoingRoundState = {
 
 export type RoundOverState = {
   board: BoardState
-  error?: Error
+  error?: String
   logs: LogsRB
   winner: Allegiance
 }
