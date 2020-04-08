@@ -101,7 +101,7 @@ const MainPage = () => {
   return (
     <Segment basic>
       <Button onClick={handleCompete}> Compete! </Button>
-      <TurnControls boardData={boardData} onTurnChange={setCurrentTurn} />
+      <TurnControls boardData={boardData} onTurnChange={setCurrentTurn} disabled={boardData === undefined} />
       <Board boardData={boardData ? turnData : undefined} />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 10 }}>
         <BotCodeEditorPanel

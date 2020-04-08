@@ -5,7 +5,7 @@ import propTypes from 'prop-types'
 const calcGameLength = board =>
   board.red.length + board.blue.length
 
-const TurnControls = ({ boardData, onTurnChange }) => {
+const TurnControls = ({ boardData, onTurnChange, disabled = false }) => {
   const [currentTurn, setCurrentTurn] = useState(0)
   const [isPlaying, setIsPlaying] = useState(false)
   const playInterval = 100
@@ -56,15 +56,17 @@ const TurnControls = ({ boardData, onTurnChange }) => {
       <Button
         icon
         onClick={_ => handleTurnChange(0)}
+        disabled={disabled}
       > <Icon name='angle double left' /> </Button>
       <Button
         icon
         onClick={_ => handleTurnChange(currentTurn - 1)}
-        disabled={isPlaying}
+        disabled={disabled || isPlaying}
       > <Icon name='angle left' /> </Button>
       <Button
         icon
         onClick={handlePlayOrPause}
+        disabled={disabled}
       > {isPlaying
           ? <Icon name='pause' />
           : <Icon name='play' />
@@ -72,11 +74,12 @@ const TurnControls = ({ boardData, onTurnChange }) => {
       <Button
         icon
         onClick={_ => handleTurnChange(currentTurn + 1)}
-        disabled={isPlaying}
+        disabled={disabled || isPlaying}
       > <Icon name='angle right' /> </Button>
       <Button
         icon
         onClick={_ => handleTurnChange(121)}
+        disabled={disabled}
       > <Icon name='angle double right' /> </Button>
     </span>
   )
@@ -84,7 +87,8 @@ const TurnControls = ({ boardData, onTurnChange }) => {
 
 TurnControls.propTypes = {
   boardData: propTypes.object,
-  onTurnChange: propTypes.func
+  onTurnChange: propTypes.func,
+  disabled: propTypes.bool
 }
 
 export default TurnControls
