@@ -37,6 +37,7 @@ const MainPage = () => {
   const [messages, setMessages] = useState([[], []])
   const [boardData, setBoardData] = useState()
   const [currentTurn, setCurrentTurn] = useState(0)
+  const [winningPath, setWinningPath] = useState()
 
   const handleApplyCode = index => value => {
     // Merge old and new scripts
@@ -89,6 +90,9 @@ const MainPage = () => {
 
     // Save board data
     setBoardData(translateBoardData(result.board, 1, 1))
+
+    // Set winning path display
+    setWinningPath(result.path.map(({ x, y }) => ({ x: x + 1, y: y + 1 })))
   }
 
   // Calculate and memoize turn data
@@ -98,11 +102,14 @@ const MainPage = () => {
     }
   }, [boardData, currentTurn])
 
+  const gameLength = boardData && (boardData.red.length + boardData.blue.length)
+  const isLastTurn = boardData && (currentTurn === gameLength)
+
   return (
     <Segment basic>
       <Button onClick={handleCompete}> Compete! </Button>
       <TurnControls boardData={boardData} onTurnChange={setCurrentTurn} disabled={boardData === undefined} />
-      <Board boardData={boardData ? turnData : undefined} />
+      <Board boardData={boardData ? turnData : undefined} highlightPath={isLastTurn ? winningPath : undefined} />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 10 }}>
         <BotCodeEditorPanel
           title={'Bot 1'}

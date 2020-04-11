@@ -6,8 +6,11 @@ import { centeredGrid } from '../util/hexGrid'
 const redHex = '#e52c3d'
 const blueHex = '#655de1'
 const greyHex = '#333333'
+const redHexFaded = 'hsla(354, 78%, 85%, 1)'
+const blueHexFaded = 'hsl(244, 69%, 85%)'
+const greyHexFaded = 'hsla(0, 0%, 80%, 1)'
 
-const Board = ({ boardData }) => {
+const Board = ({ boardData, highlightPath }) => {
   const gridSize = 11
   const svgAspectWidth = 700
   const svgAspectHeight = 500
@@ -25,7 +28,7 @@ const Board = ({ boardData }) => {
       <svg viewBox={[0, 0, svgAspectWidth, svgAspectHeight]}>
         {
           polys.map((poly, i) => (
-            <BoardHex key={i} i={i} poly={poly} gridSize={gridSize} boardData={boardData} />
+            <BoardHex key={i} i={i} poly={poly} gridSize={gridSize} boardData={boardData} highlightPath={highlightPath} />
           ))
         }
       </svg>
@@ -33,14 +36,18 @@ const Board = ({ boardData }) => {
   )
 }
 
-const BoardHex = ({ i, poly, gridSize, boardData }) => {
+const BoardHex = ({ i, poly, gridSize, boardData, highlightPath }) => {
   const { red, blue } = boardData
   const xPos = 1 + Math.floor(i / gridSize)
   const yPos = 1 + i % gridSize
   const isRed = !!red.some(({ x, y }) => x === xPos && y === yPos)
   const isBlue = !isRed && !!blue.some(({ x, y }) => x === xPos && y === yPos)
+  const doFade = highlightPath && !highlightPath.some(({ x, y }) => x === xPos && y === yPos)
+  const fill = !doFade
+    ? isRed ? redHex : (isBlue ? blueHex : greyHex)
+    : (isRed ? redHexFaded : (isBlue ? blueHexFaded : greyHexFaded))
   return (
-    <polygon points={poly} style={{ fill: isRed ? redHex : (isBlue ? blueHex : greyHex) }}/>
+    <polygon points={poly} style={{ fill, transition: highlightPath ? '.4s' : '.1s' }}/>
   )
 }
 
@@ -69,14 +76,16 @@ export const boardAtTurn = ({ red, blue }, turnNum) => {
 }
 
 Board.propTypes = {
-  boardData: propTypes.object
+  boardData: propTypes.object,
+  highlightPath: propTypes.array
 }
 
 BoardHex.propTypes = {
   i: propTypes.number,
   gridSize: propTypes.number,
   poly: propTypes.array,
-  boardData: propTypes.object
+  boardData: propTypes.object,
+  highlightPath: propTypes.array
 }
 
 export default Board

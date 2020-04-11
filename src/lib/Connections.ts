@@ -3,7 +3,7 @@ import {
   Allegiance,
   Checker
 } from './Hex.d'
-import { transposeBoard } from './Transposition'
+import { transposeBoard, transposePositions } from './Transposition'
 
 export const winningAllegiance = (board : BoardState) : ( Allegiance | void) => {
   // Has red or blue won?
@@ -28,33 +28,69 @@ export const allegianceHasWon = (board : BoardState, allegiance : Allegiance) : 
   }
 
   // Get all of my pieces in the first col
-  const firstColumn = Array.from({length: 11}).map((_, y) => ({x: 0, y}))
+  const inRed = h => board.red.some(({x,y}) => h.x === x && h.y === y)
+  const inBlue = h => board.blue.some(({x,y}) => h.x === x && h.y === y)
+  const firstColumn = Array.from({length: 11}).map((_, y) => ({x: 0, y})).filter(h => allegiance === 'RED' ? inRed(h) : inBlue(h))
   const connected = allConnected(board, allegiance, firstColumn)
-  const hasPath = connected.some(({ x, y }) => x === 10)
+  const endNodes = connected.filter(({checker: { x, y }}) => x === 10)
+  const hasPath = endNodes.length !== 0
 
   // Allegiance has won if we have a connected piece in the last column
   return hasPath
+}
+
+export const findWinningPath = (board : BoardState, allegiance : Allegiance): (Checker[] | void) => {
+  // Blue has same logic as red after all of their pieces positions are transposed i.e (x,y)=(y,x)
+  if (allegiance === 'BLUE') {
+    board = transposeBoard(board)
+  }
+
+  // Get all of my pieces in the first col
+  const inRed = h => board.red.some(({x,y}) => h.x === x && h.y === y)
+  const inBlue = h => board.blue.some(({x,y}) => h.x === x && h.y === y)
+  const firstColumn = Array.from({length: 11}).map((_, y) => ({x: 0, y})).filter(h => allegiance === 'RED' ? inRed(h) : inBlue(h))
+  const connected = allConnected(board, allegiance, firstColumn)
+  const endNodes = connected.filter(({checker: { x, y }}) => x === 10)
+  
+  // Do we not have a path
+  const hasPath = endNodes.length !== 0
+  if (!hasPath) { return }
+
+  // Trace path
+  let end : PathNode = endNodes[0]
+  let path : Checker[] = []
+  while (end) {
+    path.push(end.checker)
+    end = end.previous
+  }
+
+  if (allegiance === 'RED') {
+    return path
+  } else {
+    return transposePositions(path)
+  }
 }
 
 const allConnected = (board : BoardState, allegiance : Allegiance, positions : Checker[]) =>
   floodFill(
     adjacentPositions,
     (pos) => isAllegiance(board, allegiance, pos),
-    [], positions
+    [], positions.map(pos => ({ previous: null, checker: pos }))
   )
 
-type FloodFillF = (next : (checker : Checker) => Checker[], doProgress : (checker : Checker) => boolean, closed : Checker[], open : Checker[]) => Checker[]
+type PathNode = { checker: Checker, previous: PathNode | null }
+type FloodFillF = (next : (checker : Checker) => Checker[], doProgress : (checker : Checker) => boolean, closed : PathNode[], open : PathNode[]) => PathNode[]
 const floodFill : FloodFillF = (next, doProgress, closed, open) => {
   // Recursive base case is when open is null
   if (open.length === 0) { return [] }
 
   const allAdjoining = open
-    .map(pos => next(pos).filter(doProgress))
+    .map(oNode => next(oNode.checker).filter(doProgress).map(checker => ({ checker, previous: oNode })))
     .reduce((a, b) => a.concat(b))
 
-  const uniqueAdjoining = uniquePositionsIn(allAdjoining)
+  const uniqueAdjoining = uniqueNodesIn(allAdjoining)
   const closed_ = [...closed, ...open]
-  const open_ = uniqueAdjoining.filter(pos => !hasPosition(closed_, pos))
+  const open_ = uniqueAdjoining.filter(pos => !hasPosition(closed_.map(x => x.checker), pos.checker))
   const closed__ = [...closed_, ...uniqueAdjoining]
   
   return [...open_, ...floodFill(next, doProgress, closed__, open_)] 
@@ -81,11 +117,11 @@ const adjacentPositions = ({ x, y } : Checker) : Checker[] =>
     makePosition(x + 1, y - 1)
   ].filter(validPosition)
 
-const uniquePositionsIn = (pieces : Checker[]) : Checker[] => {
+const uniqueNodesIn = (nodes : PathNode[]) : PathNode[] => {
   let acc = []
-  for (let piece of pieces) {
-    if (!hasPosition(acc, piece)) {
-      acc.push(piece)
+  for (let node of nodes) {
+    if (!hasPosition(acc, node.checker)) {
+      acc.push(node)
     }
   }
 

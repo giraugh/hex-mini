@@ -9,7 +9,7 @@ import {
   OngoingRoundState
 } from './Hex.d'
 import { makeBotRunFunction } from './Scripts'
-import { winningAllegiance } from './Connections'
+import { winningAllegiance, findWinningPath } from './Connections'
 import { transposePositions, transposePosition } from './Transposition'
 
 export const runFullRound = (redRunSource : string, blueRunSource : string) : RoundOverState => {
@@ -107,7 +107,8 @@ export const nextRoundState : NextRoundStateF = (state) => {
     return {
       board: newBoard,
       logs: newLogs,
-      winner: winner
+      winner: winner,
+      path: findWinningPath(newBoard, winner) || []
     }
   }
 

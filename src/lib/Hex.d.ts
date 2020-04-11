@@ -25,7 +25,8 @@ export type RoundOverState = {
   board: BoardState
   error?: String
   logs: LogsRB
-  winner: Allegiance
+  winner: Allegiance,
+  path?: Checker[]
 }
 
 export type RoundState = OngoingRoundState | RoundOverState
