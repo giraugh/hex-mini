@@ -51,17 +51,19 @@ const TurnControls = ({ boardData, onTurnChange, disabled = false }) => {
     return () => clearInterval(int)
   })
 
+  const gameLength = calcGameLength(boardData)
+
   return (
     <span style={{ marginLeft: '10px' }}>
       <Button
         icon
         onClick={_ => handleTurnChange(0)}
-        disabled={disabled}
+        disabled={disabled || currentTurn === 0}
       > <Icon name='angle double left' /> </Button>
       <Button
         icon
         onClick={_ => handleTurnChange(currentTurn - 1)}
-        disabled={disabled || isPlaying}
+        disabled={disabled || isPlaying || currentTurn === 0}
       > <Icon name='angle left' /> </Button>
       <Button
         icon
@@ -74,12 +76,12 @@ const TurnControls = ({ boardData, onTurnChange, disabled = false }) => {
       <Button
         icon
         onClick={_ => handleTurnChange(currentTurn + 1)}
-        disabled={disabled || isPlaying}
+        disabled={disabled || isPlaying || currentTurn === gameLength}
       > <Icon name='angle right' /> </Button>
       <Button
         icon
         onClick={_ => handleTurnChange(121)}
-        disabled={disabled}
+        disabled={disabled || currentTurn === gameLength}
       > <Icon name='angle double right' /> </Button>
     </span>
   )
