@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react'
-import { Segment, Button } from 'semantic-ui-react'
+import { Segment, Button, Checkbox, Icon } from 'semantic-ui-react'
 
 import TurnControls from '../components/TurnControls'
 import Board, { translateBoardData, boardAtTurn } from '../components/Board'
@@ -38,6 +38,7 @@ const MainPage = () => {
   const [boardData, setBoardData] = useState()
   const [currentTurn, setCurrentTurn] = useState(0)
   const [winningPath, setWinningPath] = useState()
+  const [showPath, setShowPath] = useState(true)
 
   const handleApplyCode = index => value => {
     // Merge old and new scripts
@@ -66,6 +67,8 @@ const MainPage = () => {
       return m
     }
   })
+
+  const handleToggleShowPath = () => setShowPath(!showPath)
 
   // eslint-disable-next-line no-unused-vars
   const handleMatchResult = result => {
@@ -108,8 +111,18 @@ const MainPage = () => {
   return (
     <Segment basic>
       <Button onClick={handleCompete}> Compete! </Button>
-      <TurnControls boardData={boardData} onTurnChange={setCurrentTurn} disabled={boardData === undefined} />
-      <Board boardData={boardData ? turnData : undefined} highlightPath={isLastTurn ? winningPath : undefined} />
+      <TurnControls
+        boardData={boardData}
+        onTurnChange={setCurrentTurn}
+        disabled={boardData === undefined} />
+      <Button
+        icon={ showPath ? 'moon' : 'sun'}
+        style={{ marginLeft: 8 }}
+        disabled={boardData === undefined}
+        onClick={handleToggleShowPath} />
+      <Board
+        boardData={boardData ? turnData : undefined}
+        highlightPath={(isLastTurn && showPath) ? winningPath : undefined} />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 10 }}>
         <BotCodeEditorPanel
           title={'Bot 1'}
