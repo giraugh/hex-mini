@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react'
-import { Segment, Button, Checkbox, Icon } from 'semantic-ui-react'
+import { Segment, Button } from 'semantic-ui-react'
 
 import TurnControls from '../components/TurnControls'
 import Board, { translateBoardData, boardAtTurn } from '../components/Board'
@@ -95,7 +95,7 @@ const MainPage = () => {
     setBoardData(translateBoardData(result.board, 1, 1))
 
     // Set winning path display
-    setWinningPath(result.path.map(({ x, y }) => ({ x: x + 1, y: y + 1 })))
+    setWinningPath(result.path ? result.path.map(({ x, y }) => ({ x: x + 1, y: y + 1 })) : undefined)
   }
 
   // Calculate and memoize turn data
@@ -116,7 +116,7 @@ const MainPage = () => {
         onTurnChange={setCurrentTurn}
         disabled={boardData === undefined} />
       <Button
-        icon={ showPath ? 'moon' : 'sun'}
+        icon={ showPath ? 'low vision' : 'eye'}
         style={{ marginLeft: 8 }}
         disabled={boardData === undefined}
         onClick={handleToggleShowPath} />
