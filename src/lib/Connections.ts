@@ -4,7 +4,6 @@ import {
   Checker
 } from './Hex.d'
 import { transposeBoard } from './Transposition'
-import { isNoSubstitutionTemplateLiteral } from 'typescript'
 
 export const winningAllegiance = (board : BoardState) : ( Allegiance | void) => {
   // Has red or blue won?
@@ -29,9 +28,7 @@ export const allegianceHasWon = (board : BoardState, allegiance : Allegiance) : 
   }
 
   // Get all of my pieces in the first col
-  const inRed = h => board.red.some(({x,y}) => h.x === x && h.y === y)
-  const inBlue = h => board.blue.some(({x,y}) => h.x === x && h.y === y)
-  const firstColumn = Array.from({length: 11}).map((_, y) => ({x: 0, y})).filter(h => allegiance === 'RED' ? inRed(h) : inBlue(h))
+  const firstColumn = Array.from({length: 11}).map((_, y) => ({x: 0, y}))
   const connected = allConnected(board, allegiance, firstColumn)
   const hasPath = connected.some(({ x, y }) => x === 10)
 
