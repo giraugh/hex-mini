@@ -120,6 +120,11 @@ const MainPage = () => {
         style={{ marginLeft: 8 }}
         disabled={boardData === undefined}
         onClick={handleToggleShowPath} />
+      <Button
+        icon='question'
+        as='a'
+        href='http://github.com/retroverse/hex-mini/wiki/Basic-API'
+        target='_blank' />
       <Board
         boardData={boardData ? turnData : undefined}
         highlightPath={(isLastTurn && showPath) ? winningPath : undefined} />

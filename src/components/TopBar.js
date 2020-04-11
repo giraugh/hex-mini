@@ -18,7 +18,7 @@ const TopBar = () => {
       style={{ border: 'none' }}
     >
       <Container>
-        <Menu.Item header as='h3' to='/'style={menuItemStyle} active={true}>Hex <sup>Mini</sup></Menu.Item>
+        <Menu.Item header as='h3' to='/' style={menuItemStyle} active={true}>Hex <sup>Mini</sup></Menu.Item>
       </Container>
     </Menu>
   )
